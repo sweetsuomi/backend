@@ -20,6 +20,7 @@ const config = {
 	aws_accessKey: process.env.AWS_ACCESS_KEY,
 	aws_region: process.env.AWS_REGION,
 	aws_s3Bucket: process.env.AWS_S3_BUCKET,
+	aws_cloudfront: process.env.AWS_CLOUDFRONT,
 	
 	// Winston 3rd party library
 	logLevel: String(process.env.BACKEND_WINSTON_LOG_LEVEL) || 'info',
@@ -38,7 +39,9 @@ const config = {
 	images_mimeType: process.env.IMAGES_MIMETYPE || 'image/png',
 	intolerance_size: process.env.INTOLERANCE_SIZE || 40,
 	
-	moment_locale: process.env.MOMENT_LOCALE || 'es'
+	moment_locale: process.env.MOMENT_LOCALE || 'es',
+
+	admin_email: process.env.ADMIN_EMAIL || 'test@test.com'
 };
 
 module.exports = config;

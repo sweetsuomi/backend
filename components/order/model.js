@@ -9,7 +9,6 @@ const model = {
 		length: {
 			max: 100
 		},
-		default: 0
 	},
 	isDelivered: {
 		type: 'Boolean',
@@ -21,8 +20,7 @@ const model = {
 		required: true
 	},
 	time: {
-		type: 'ObjectId',
-		ref: 'Schedule',
+		type: 'Number',
 		required: true
 	}
 };

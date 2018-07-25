@@ -14,7 +14,7 @@ router.get('/:user?/:date?', (req, res, next) => {
 
 // Post an order
 router.post('/', verifyToken, (req, res, next) => {
-	Controller.post(req.user.sub, req.body).then(response => {
+	Controller.post(req.user, req.body).then(response => {
 		Response.success(req, res, next, (response.code || 200), response.data);
 	}).catch(error => {
 		Response.error(req, res, next, (error.status || 500), error.message);
