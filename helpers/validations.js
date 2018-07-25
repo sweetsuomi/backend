@@ -83,7 +83,7 @@ function minLength(string, minValue) {
 };
 
 function maxLength(string, maxValue) {
-	if (string.length < maxValue) {
+	if (string.length <= maxValue) {
 		return true
 	}
 };

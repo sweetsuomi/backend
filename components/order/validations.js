@@ -16,8 +16,12 @@ function verifyTime(time) {
 	return new Promise((resolve, reject) => {
 		if (Validations.isUndefined(time)) {
 			return reject(e.error('ORDER_TIME_NOT_DEFINED'));
-		} else if (!Validations.isMongoose(time)) {
+		} else if (!Validations.isString(time)) {
 			return reject(e.error('ORDER_TIME_NOT_DEFINED'));
+		} else if (!Validations.maxLength(time, 5)) {
+			return reject(e.error('ORDER_TIME_NOT_VALID'));
+		} else if (!Validations.minLength(time, 5)) {
+			return reject(e.error('ORDER_TIME_NOT_VALID'));
 		}
 		resolve();
 	});

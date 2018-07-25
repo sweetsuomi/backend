@@ -7,6 +7,8 @@ const e = require('../../helpers/errors');
 exports.list = list;
 exports.upsert = upsert;
 exports.remove = remove;
+exports.updateDishQuantity = updateDishQuantity;
+exports.hasEnoughQuantity = hasEnoughQuantity;
 
 function list(query) {
 	let date = query.date ? query.date : moment().format('YYYY-MM-DD');
@@ -46,6 +48,25 @@ function remove(menuId) {
 	}).then(() => {
 		return { data: true };
 	});
+}
+
+function updateDishQuantity(dish, date, time, quantity) {
+	return Store.updateDishQuantity(dish, date, time, quantity);
+}
+
+function hasEnoughQuantity(order, date, schedule) {
+	let queries = [];
+	for (let i = 0; i < order.length; i += 1) {
+		queries.push(
+			Store.hasEnoughQuantity(
+				order[i].dish,
+				date,
+				schedule,
+				parseInt(order[i].quantity, 10)
+			)
+		);
+	}
+	return Promise.all(queries)
 }
 
 function getArrayOfScheduleId(time) {

@@ -101,7 +101,11 @@ let lang = {
 	MENU_DISH_NOT_EXIST: "The dish doesn't exist.",
 	MENU_NOT_DELETED: "There are no dishes for the selected date.",
 	MENU_NOT_VALID: "The menu is not valid.",
+	MENU_NOT_ENOUGH_QUANTITY: "There are not enough dishes",
 	// ORDER
+	ORDER_ID_NOT_DEFINED: "There's an error setting up the menu",
+	ORDER_DISH_NOT_DEFINED: "There's an error setting up the menu",
+	ORDER_DISH_NOT_VALID: "There's an error setting up the menu",
 	ORDER_TIME_NOT_DEFINED: "It's necesary to define the time of the order",
 	ORDER_DATE_NOT_DEFINED: "It's necesary to define the date of the order",
 	ORDER_NOTE_NOT_VALID: "There's a problem with the order note",
