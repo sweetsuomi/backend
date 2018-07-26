@@ -114,6 +114,9 @@ let lang = {
 	ORDER_IS_EMPTY: "No hay pedidos para la fecha seleccionada",
 	ORDER_NOT_DELETED: "No se ha podido borrar el pedido",
 	ORDER_NOT_ENOUGH_QUANTITY: "Alguno de tus platos excede la cantidad disponible",
+	ORDER_NOT_DEFINED: "Es necesario definir el id del pedido",
+	ORDER_NOT_VALID: "El pedido no es válido",
+	ORDER_STATUS_NOT_DEFINED: "Es necesario definir el estado en el que se encuentra el pedido",
 	// FEEDBACK
 	FEEDBACK_EMPTY: "Hay un problema enviando el feedback.",
 	FEEDBACK_LONGER: "¿Podrías detallar algo mas qué te parece nuestra aplicación?",

@@ -114,6 +114,9 @@ let lang = {
 	ORDER_IS_EMPTY: "There are no orders for the selected date",
 	ORDER_NOT_DELETED: "The order couldn't be deleted",
 	ORDER_NOT_ENOUGH_QUANTITY: "There is not enough quantity in some of your dishes",
+	ORDER_NOT_DEFINED: "It's necesary to define the order",
+	ORDER_NOT_VALID: "The order is not valid",
+	ORDER_STATUS_NOT_DEFINED: "It's necesary to define the order status",
 	//FEEDBACK
 	FEEDBACK_EMPTY: "There's a problem with the feedback provided.",
 	FEEDBACK_LONGER: "Could you detail a little bit more what do you think about the app?",

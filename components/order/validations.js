@@ -3,6 +3,7 @@ const Validations = require('../../helpers/validations');
 const e = require('../../helpers/errors');
 
 exports.post = post;
+exports.deliver = deliver;
 
 function post(date, note, time) {
     return Promise.all([
@@ -10,6 +11,33 @@ function post(date, note, time) {
         verifyDate(date),
         verifyNote(note)
     ]);
+}
+
+function deliver(order, status) {
+	return Promise.all([
+		verifyOrder(order),
+		verifyStatus(status)
+	]);
+}
+
+function verifyOrder(order) {
+	return new Promise((resolve, reject) => {
+		if (Validations.isUndefined(order)) {
+			return reject(e.error('ORDER_NOT_DEFINED'));
+		} else if (!Validations.isMongoose(order)) {
+			return reject(e.error('ORDER_NOT_VALID'));
+		}
+		resolve();
+	});
+}
+
+function verifyStatus(status) {
+	return new Promise((resolve, reject) => {
+		if (Validations.isUndefined(status)) {
+			return reject(e.error('ORDER_STATUS_NOT_DEFINED'));
+		}
+		resolve();
+	});
 }
 
 function verifyTime(time) {
