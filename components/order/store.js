@@ -5,6 +5,13 @@ const schema = 'Order';
 
 exports.list = list;
 exports.post = post;
+exports.deliver = deliver;
+
+function exist(condition) {
+	return Store.query(schema, condition, {}, false).then(response => {
+		return response ? true : false;
+	});
+}
 
 function list(user, date, offset, limit) {
     let query = {};
@@ -32,4 +39,15 @@ function post(user, date, note, time) {
 	}
 	
 	return Store.post(schema, query);
+}
+
+function deliver(order, isDelivered) {
+	return exist({ id: order }).then(response => {
+		if (!response) {
+			throw e.error('ORDER_NOT_EXIST');
+		}
+		return Store.upsert(schema, order, {
+			isDelivered: isDelivered
+		}, {});
+	});
 }

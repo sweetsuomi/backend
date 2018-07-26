@@ -10,6 +10,7 @@ const e = require('../../helpers/errors');
 
 exports.list = list;
 exports.post = post;
+exports.deliver = deliver;
 
 function list(query) {
 	const offset = query.offset ? parseInt(query.offset) : 0;
@@ -47,6 +48,13 @@ function post(user, data) {
 	});
 }
 
+function deliver(data) {
+	return Validate.deliver(data.order, data.deliver).then(() => {
+		return Store.deliver(data.order, data.deliver);
+	}).then(() => {
+		return { data: true };
+	});
+}
 // (CancelOrder, { nickname: nickname, email: email })
 
 // let dishes = '';
