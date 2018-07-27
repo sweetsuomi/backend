@@ -117,6 +117,7 @@ let lang = {
 	ORDER_NOT_DEFINED: "Es necesario definir el id del pedido",
 	ORDER_NOT_VALID: "El pedido no es válido",
 	ORDER_STATUS_NOT_DEFINED: "Es necesario definir el estado en el que se encuentra el pedido",
+	ORDER_DELETE_FORBIDDEN: "No es posible borrar este pedido porque está muy próximo a la hora de entrega",
 	// FEEDBACK
 	FEEDBACK_EMPTY: "Hay un problema enviando el feedback.",
 	FEEDBACK_LONGER: "¿Podrías detallar algo mas qué te parece nuestra aplicación?",

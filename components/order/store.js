@@ -4,13 +4,19 @@ const e = require('../../helpers/errors');
 const schema = 'Order';
 
 exports.list = list;
+exports.get = get;
 exports.post = post;
 exports.deliver = deliver;
+exports.remove = remove;
 
 function exist(condition) {
 	return Store.query(schema, condition, {}, false).then(response => {
 		return response ? true : false;
 	});
+}
+
+function get(id) {
+	return Store.query(schema, { id: id }, {}, false);
 }
 
 function list(user, date, offset, limit) {
@@ -49,5 +55,14 @@ function deliver(order, isDelivered) {
 		return Store.upsert(schema, order, {
 			isDelivered: isDelivered
 		}, {});
+	});
+}
+
+function remove(order) {
+	return exist({ id: order }).then(response => {
+		if (!response) {
+			throw e.error('ORDER_NOT_EXIST');
+		}
+		return Store.remove(schema, order);	
 	});
 }

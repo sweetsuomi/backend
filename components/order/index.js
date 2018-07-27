@@ -11,6 +11,7 @@ const e = require('../../helpers/errors');
 exports.list = list;
 exports.post = post;
 exports.deliver = deliver;
+exports.remove = remove;
 
 function list(query) {
 	const offset = query.offset ? parseInt(query.offset) : 0;
@@ -26,7 +27,7 @@ function list(query) {
 }
 
 function post(user, data) {
-	return Validate.post(data.date, data.note, data.time).then(() => {
+	return Validate.post(data.date, data.note, data.time, data.schedule).then(() => {
 		data.date = parseInt(data.date.replace(/-/g, ''), 10);
 	}).then(() => {
 		return menu.hasEnoughQuantity(data.order, data.date, data.schedule);
@@ -55,6 +56,58 @@ function deliver(data) {
 		return { data: true };
 	});
 }
+
+// Validate & remove the order in case you are admin or in case that the margin of time is less than 1 hour
+function remove(user, order) {
+	return Validate.remove(order).then(() => {
+		return Store.get(order);
+	}).then(response => {
+		const time = parseInt(moment().format('HH:mm').replace(/:/g, ''), 10);
+
+		if (!user.isAdmin && response.time - time < 60) {
+			throw e.error('ORDER_DELETE_FORBIDDEN');
+		}
+
+		return orderDish.remove(order);
+	}).then(() => {
+		return Store.remove(order);
+	}).then(() => {
+		sendOrderEmail('cancelOrder', 'Sweetsuomi - Pedido cancelado', {});
+		sendOrderEmail('userCancelOrder', 'Sweetsuomi - Pedido cancelado', {});
+		return { data: true };
+	});
+}
+
+function deleteOrder(req, res, next) {
+	OrderDish.getOrderList([req.query.orderId])
+		.then(response => {
+			req.orderList = response;
+			return Menu.replaceItems(response, req.query.date);
+		}).then(() => {
+			return Order.deleteOrder(req.query.orderId);
+		}).then(() => {
+			return userCancelOrderMail(req.orderList);
+		}).then(response => {
+			return AWS.ses.sendMail('jesushuertaarrabal@gmail.com', 'Un pedido ha sido eliminado', response);
+		}).then(() => res.status(200).send())
+		.catch((error) => next(error));
+}
+
+function deleteOrderForce(req, res, next) {
+	Order.deleteOrderForce(req.query.orderId)
+		.then(() => {
+			return OrderDish.deleteOrderDishes(req.query.orderId);
+		}).then(() => {
+			return User.getUser(req.query.user_id);
+		}).then(response => {
+			req.userMail = response.credentials.email;
+			return mail();
+		}).then(response => {
+			return AWS.ses.sendMail(req.userMail, 'Your order has been cancelled', response);
+		}).then(data => res.status(200).send(data))
+		.catch(error => next(error));
+}
+
 // (CancelOrder, { nickname: nickname, email: email })
 
 // let dishes = '';

@@ -22,15 +22,15 @@ router.post('/', verifyToken, (req, res, next) => {
 });
 
 router.put('/deliver', verifyToken, (req, res, next) => {
-	Controller.deliver(req.body).then(response => {
+	Controller.deliver(req.user, req.body).then(response => {
 		Response.success(req, res, next, (response.code || 200), response.data);
 	}).catch(error => {
 		Response.error(req, res, next, (error.status || 500), error.message);
 	});
 });
 
-router.delete('/:menuId', verifyToken, (req, res, next) => {
-	Controller.remove(req.params.menuId).then(response => {
+router.delete('/:order', verifyToken, (req, res, next) => {
+	Controller.remove(req.user, req.params.order).then(response => {
 		Response.success(req, res, next, (response.code || 200), response.data);
 	}).catch(error => {
 		Response.error(req, res, next, (error.status || 500), error.message);
