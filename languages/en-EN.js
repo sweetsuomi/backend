@@ -132,6 +132,11 @@ let lang = {
 	ACCOUNT_PROBLEM_SENDING_FILE: "There was a problem sending the confirmation register file",
 	PROBLEM_UPLOADING_IMAGE: "There was a problem uploading the selected image",
 	PROBLEM_REMOVING_IMAGE: "There was a problem removing the image from the server",
+	// MAIL
+	MAIL_MESSAGE_EMPTY: "There's a problem with the mail message provided",
+	MAIL_MESSAGE_NOT_VALID: "This message is not valid. Try a new one",
+	MAIL_MESSAGE_LONGER: "This message is a bit short. Try a longer one",
+	MAIL_MESSAGE_SHORTER: "This message is a bit long. Try a shorter one",
 };
 
 module.exports = lang;

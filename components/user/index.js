@@ -3,6 +3,7 @@ const Validate = require('./validations');
 const e = require('../../helpers/errors');
 
 exports.exist = exist;
+exports.list = list;
 exports.get = get;
 exports.post = post;
 exports.validate = validate;
@@ -10,6 +11,10 @@ exports.getByAccount = getByAccount;
 
 function validate(nickname, phone, company, address) {
 	return Validate.post(nickname, phone, company, address);
+}
+
+function list() {
+	return Store.list();
 }
 
 function exist(nickname) {

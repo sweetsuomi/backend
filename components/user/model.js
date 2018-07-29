@@ -28,6 +28,11 @@ const model = {
 	account: {
 		type: 'ObjectId',
 		ref: 'Account'
+	},
+	isEmailSubscribed: {
+		type: 'Boolean',
+		default: true,
+		required: true
 	}
 };
 

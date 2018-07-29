@@ -132,6 +132,11 @@ let lang = {
 	PROBLEM_SENDING_FILE: "Ha habido un problema con el envío del email de confirmación.",
 	PROBLEM_UPLOADING_IMAGE: "Ha habido un problema subiendo la imagen solicitada",
 	PROBLEM_REMOVING_IMAGE: "Ha habido un problema borrando la imagen del servidor",
+	// MAIL
+	MAIL_MESSAGE_EMPTY: "Ha habido un problema con el cuerpo del mensaje",
+	MAIL_MESSAGE_NOT_VALID: "El mensaje que quieres enviar no es válido",
+	MAIL_MESSAGE_LONGER: "El mensaje de email es un poco corto. Escribe uno mas largo",
+	MAIL_MESSAGE_SHORTER: "El mensaje de email es un poco largo. Escribe uno mas corto",
 };
 
 module.exports = lang;
