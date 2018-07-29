@@ -24,7 +24,7 @@ function list(query) {
 		});
 	}
 	
-	return Schedule.getSchedule(time).then(time => {
+	return Schedule.get(time).then(time => {
 		return Store.list(date, getArrayOfScheduleId(time), offset, limit);
 	}).then(menu => {
 		return { data: menu };

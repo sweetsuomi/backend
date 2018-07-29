@@ -3,14 +3,24 @@ const Validations = require('../../helpers/validations');
 const e = require('../../helpers/errors');
 
 exports.post = post;
+exports.getByOrder = getByOrder;
+exports.removeByOrder = removeByOrder;
 
 function post(id, order) {
-    return Promise.all([
-        verifyId(id),
+	return Promise.all([
+		verifyId(id),
         verifyOrder(order)
     ]);
 }
 
+function getByOrder(id) {
+	return verifyId(id);
+}
+
+function removeByOrder(orderId) {
+	return verifyId(orderId);
+}
+	
 function verifyId(id) {
     return new Promise((resolve, reject) => {
 		if (Validations.isUndefined(id)) {

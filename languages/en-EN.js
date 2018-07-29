@@ -107,6 +107,7 @@ let lang = {
 	ORDER_DISH_NOT_DEFINED: "There's an error setting up the menu",
 	ORDER_DISH_NOT_VALID: "There's an error setting up the menu",
 	ORDER_TIME_NOT_DEFINED: "It's necesary to define the time of the order",
+	ORDER_TIME_NOT_VALID: "The time defined is not valid. Try a new one",
 	ORDER_DATE_NOT_DEFINED: "It's necesary to define the date of the order",
 	ORDER_NOTE_NOT_VALID: "There's a problem with the order note",
 	ORDER_NOTE_SHORTER: "The note of the order is too long. Use a shorter one.",
@@ -117,6 +118,7 @@ let lang = {
 	ORDER_NOT_DEFINED: "It's necesary to define the order",
 	ORDER_NOT_VALID: "The order is not valid",
 	ORDER_STATUS_NOT_DEFINED: "It's necesary to define the order status",
+	ORDER_DELETE_FORBIDDEN: "It's not possible to delete this order because there's not enough time",
 	//FEEDBACK
 	FEEDBACK_EMPTY: "There's a problem with the feedback provided.",
 	FEEDBACK_LONGER: "Could you detail a little bit more what do you think about the app?",

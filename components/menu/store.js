@@ -58,7 +58,7 @@ function remove(id) {
 		if (!response) {
 			throw e.error('DISH_NOT_EXIST');
 		}
-		return Store.remove(schema, id);
+		return Store.remove(schema, id, false);
 	});
 }
 

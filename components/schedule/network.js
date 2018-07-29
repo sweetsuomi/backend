@@ -11,7 +11,7 @@ router.get('/now', (req, res, next) => {
 	});
 });
 
-router.get('/', (req, res, next) => {
+router.get('/:enabled?', (req, res, next) => {
 	Controller.list(req.query).then(response => {
 		Response.success(req, res, next, (response.code || 200), response.data);
 	}).catch(error => {
