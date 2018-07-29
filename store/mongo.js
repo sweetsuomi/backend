@@ -91,10 +91,19 @@ function upsert(name, condition, query, filters) {
 	});
 }
 
-function remove(name, id) {
+function remove(name, condition, multi) {
 	let schema = setupSchema(name);
+	let sentence = undefined;
+
+	if (condition && condition.id && multi === false) {
+		sentence = schema.findById(condition.id);
+	} else if (multi) {
+		sentence = schema.find(condition);
+	} else {
+		sentence = schema.findOne(condition);
+	}
 	
-	return schema.findById(id).remove().exec().then(response => {
+	return sentence.remove().exec().then(response => {
 		return response.result.n === 0 ? false : true;
 	}).catch(error => {
 		logger.error(error.message);

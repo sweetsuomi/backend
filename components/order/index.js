@@ -6,6 +6,7 @@ const aws = require('../aws/index');
 const Validate = require('./validations');
 const orderDish = require('../orderDish');
 const menu = require('../menu');
+const schedule = require('../schedule');
 const e = require('../../helpers/errors');
 
 exports.list = list;
@@ -27,23 +28,19 @@ function list(query) {
 }
 
 function post(user, data) {
-	return Validate.post(data.date, data.note, data.time, data.schedule).then(() => {
-		data.date = parseInt(data.date.replace(/-/g, ''), 10);
+	const date = parseInt(moment().format('YYYY-MM-DD').replace(/-/g, ''), 10);
+	const time = moment().format('HH:mm');
+
+	return Validate.post(data.note, data.time, data.schedule, time).then(() => {
+		return isValidTime(data.schedule, data.time, time);
 	}).then(() => {
-		return menu.hasEnoughQuantity(data.order, data.date, data.schedule);
+		return menu.hasEnoughQuantity(data.order, date, data.schedule);
 	}).then(() => {
-		return Store.post(user.sub, data.date, data.note, data.time.replace(/:/g, ''));
+		return Store.post(user.sub, date, data.note, data.time.replace(/:/g, ''));
 	}).then(response => {
 		return orderDish.post(response._id, data.order);
 	}).then(() => {
-		data.email = config.admin_email;
-		data.dishes = '';
-		data.nickname = user.name;
-		for (let i = 0; i < data.order.length; i += 1) {
-			menu.updateDishQuantity(data.order[i].dish, data.date, data.schedule, data.order[i].quantity);
-			data.dishes += '<tr><td><table style="margin: 0 auto;"><tr><td><img style="width:50px;" src="' + config.aws_cloudfront + 'dish/' + data.order[i].dish + '.png" /></td><td><p style="text-align:left;">' + data.order[i].name + ' - Cantidad: ' + data.order[i].quantity + '</table></p></td></tr>';
-		}
-		sendOrderEmail('newOrder', 'Sweetsuomi - Nuevo pedido', data);
+		sendPostEmail(data, user);
 	}).then(() => {
 		return { data: true };
 	});
@@ -59,65 +56,71 @@ function deliver(data) {
 
 // Validate & remove the order in case you are admin or in case that the margin of time is less than 1 hour
 function remove(user, order) {
+	let data = {};
 	return Validate.remove(order).then(() => {
 		return Store.get(order);
 	}).then(response => {
-		const time = parseInt(moment().format('HH:mm').replace(/:/g, ''), 10);
-
-		if (!user.isAdmin && response.time - time < 60) {
-			throw e.error('ORDER_DELETE_FORBIDDEN');
+		data = response;
+		return orderDish.getByOrder(order);
+	}).then(response => {
+		data.order = response;
+		if (user.role !== 'Admin') {
+			const time = parseInt(moment().format('HH:mm').replace(/:/g, ''), 10);
+			const date = parseInt(moment().format('YYYY-MM-DD').replace(/-/g, ''), 10);
+			if (data.time - time < 60 && data.date <= date || data.date < date) {
+				throw e.error('ORDER_DELETE_FORBIDDEN');
+			}
 		}
-
-		return orderDish.remove(order);
+		return orderDish.removeByOrder(order);
 	}).then(() => {
 		return Store.remove(order);
 	}).then(() => {
-		sendOrderEmail('cancelOrder', 'Sweetsuomi - Pedido cancelado', {});
-		sendOrderEmail('userCancelOrder', 'Sweetsuomi - Pedido cancelado', {});
+		sendCancelOrderEmail(data, user);
+		sendUserCancelOrderEmail(data);
 		return { data: true };
 	});
 }
 
-function deleteOrder(req, res, next) {
-	OrderDish.getOrderList([req.query.orderId])
-		.then(response => {
-			req.orderList = response;
-			return Menu.replaceItems(response, req.query.date);
-		}).then(() => {
-			return Order.deleteOrder(req.query.orderId);
-		}).then(() => {
-			return userCancelOrderMail(req.orderList);
-		}).then(response => {
-			return AWS.ses.sendMail('jesushuertaarrabal@gmail.com', 'Un pedido ha sido eliminado', response);
-		}).then(() => res.status(200).send())
-		.catch((error) => next(error));
+function isValidTime(scheduleId, time, now) {
+	const t = parseInt(time.replace(/:/g, ''), 10);
+
+	now = parseInt(now.replace(/:/g, ''), 10);
+
+	return schedule.get(scheduleId).then(data => {
+		if (t >= data.timeEnd || now > data.timeEnd || now > t) {
+			throw e.error('ORDER_DELETE_FORBIDDEN');
+		}
+	});
 }
 
-function deleteOrderForce(req, res, next) {
-	Order.deleteOrderForce(req.query.orderId)
-		.then(() => {
-			return OrderDish.deleteOrderDishes(req.query.orderId);
-		}).then(() => {
-			return User.getUser(req.query.user_id);
-		}).then(response => {
-			req.userMail = response.credentials.email;
-			return mail();
-		}).then(response => {
-			return AWS.ses.sendMail(req.userMail, 'Your order has been cancelled', response);
-		}).then(data => res.status(200).send(data))
-		.catch(error => next(error));
+function sendPostEmail(data, user, date) {
+	data.dishes = '';
+	data.nickname = user.name;
+	data.aws_cloudfront = config.aws_cloudfront;
+	for (let i = 0; i < data.order.length; i += 1) {
+		menu.updateDishQuantity(data.order[i].dish, date, data.schedule, data.order[i].quantity);
+		data.dishes += '<tr><td><table style="margin: 0 auto;"><tr><td><img style="width:50px;" src="' + config.aws_cloudfront + 'dish/' + data.order[i].dish + '.png" /></td><td><p style="text-align:left;">' + data.order[i].name + ' - Cantidad: ' + data.order[i].quantity + '</table></p></td></tr>';
+	}
+	sendOrderEmail('newOrder', 'Sweetsuomi - Nuevo pedido', data, config.admin_email);
 }
 
-// (CancelOrder, { nickname: nickname, email: email })
+function sendCancelOrderEmail(data, user) {
+	data.nickname = user.name;
+	data.aws_cloudfront = config.aws_cloudfront;
+	sendOrderEmail('cancelOrder', 'Sweetsuomi - Pedido cancelado', data, config.admin_email);
+}
 
-// let dishes = '';
-//	for (let i = 0; i < order.length; i += 1) {
-//		dishes += '<tr><td>' + order[i].dish.title + ' - Cantidad: ' + order[i].quantity + '</tr></td>';
-//	}
-// (UserCancelOrder, { dishes: dishes })
+function sendUserCancelOrderEmail(data) {
+	data.dishes = '';
+	for (let i = 0; i < data.order.length; i += 1) {
+		data.dishes += '<tr><td><table style="margin: 0 auto;"><tr><td><img style="width:50px;" src="' + config.aws_cloudfront + 'dish/' + data.order[i].dish._id + '.png" /></td><td><p style="text-align:left;">' + data.order[i].dish.title + ' - Cantidad: ' + data.order[i].quantity + '</table></p></td></tr>';
+	}
+	sendOrderEmail('userCancelOrder', 'Sweetsuomi - Pedido cancelado', data, config.admin_email);
 
-function sendOrderEmail(type, title, data) {
+}
+
+function sendOrderEmail(type, title, data, email) {
 	mail.build(type, data).then(response => {
-		return aws.sendMail(data.email, title, response);
+		return aws.sendMail(email, title, response);
 	});
 }

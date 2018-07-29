@@ -43,6 +43,6 @@ function disable(id) {
 		if (!response) {
 			throw e.error('CATEGORY_NOT_EXIST');
 		}
-		return Store.remove(schema, id);	
+		return Store.remove(schema, id, false);	
 	});
 }

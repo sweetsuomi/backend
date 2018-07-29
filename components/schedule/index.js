@@ -5,7 +5,7 @@ const e = require('../../helpers/errors');
  
 exports.list = list;
 exports.getNow = getNow;
-exports.getSchedule = getSchedule;
+exports.get = get;
 exports.post = post;
 exports.upsert = upsert;
 exports.disable = disable;
@@ -19,13 +19,13 @@ function list(filter) {
 }
 
 function getNow() {
-	return this.getSchedule(moment().format('HH:mm')).then(schedule => {
+	return this.get(moment().format('HH:mm')).then(schedule => {
 		return { data: schedule };
 	});
 }
 
-function getSchedule(time) {
-	return Store.getSchedule(parseInt(time.replace(/:/g, '')));
+function get(time) {
+	return Store.get(time.replace(/:/g, ''));
 }
 
 function post(data) {

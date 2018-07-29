@@ -6,10 +6,9 @@ exports.post = post;
 exports.deliver = deliver;
 exports.remove = remove;
 
-function post(date, note, time, schedule) {
+function post(note, time, schedule, now) {
     return Promise.all([
-        verifyTime(time),
-        verifyDate(date),
+        verifyTime(time, now),
         verifyNote(note),
         verifySchedule(schedule)
     ]);
@@ -56,15 +55,6 @@ function verifyTime(time) {
 			return reject(e.error('ORDER_TIME_NOT_VALID'));
 		} else if (!Validations.minLength(time, 5)) {
 			return reject(e.error('ORDER_TIME_NOT_VALID'));
-		}
-		resolve();
-	});
-};
-
-function verifyDate(date) {
-	return new Promise((resolve, reject) => {
-		if (Validations.isUndefined(date)) {
-			return reject(e.error('ORDER_DATE_NOT_DEFINED'));
 		}
 		resolve();
 	});

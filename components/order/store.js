@@ -16,7 +16,13 @@ function exist(condition) {
 }
 
 function get(id) {
-	return Store.query(schema, { id: id }, {}, false);
+	const condition = { id: id };
+	return exist(condition).then(response => {
+		if (!response) {
+			throw e.error('ORDER_NOT_EXIST');
+		}
+		return Store.query(schema, condition, {}, false);
+	});
 }
 
 function list(user, date, offset, limit) {
@@ -59,10 +65,11 @@ function deliver(order, isDelivered) {
 }
 
 function remove(order) {
-	return exist({ id: order }).then(response => {
+	const condition = { id: order };
+	return exist(condition).then(response => {
 		if (!response) {
 			throw e.error('ORDER_NOT_EXIST');
 		}
-		return Store.remove(schema, order);	
+		return Store.remove(schema, condition, false);	
 	});
 }

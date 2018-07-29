@@ -107,6 +107,7 @@ let lang = {
 	ORDER_DISH_NOT_DEFINED: "Hay un problema configurando el menu",
 	ORDER_DISH_NOT_VALID: "Hay un problema configurando el menu",
 	ORDER_TIME_NOT_DEFINED: "Es necesario definir la hora del pedido",
+	ORDER_TIME_NOT_VALID: "La hora definida no es válida. Prueba con una nueva",
 	ORDER_DATE_NOT_DEFINED: "Es necesario definir la fecha del pedido",
 	ORDER_NOTE_NOT_VALID: "Hay un problema con la nota que has dejado",
 	ORDER_NOTE_SHORTER: "La nota que has escrito es algo larga. Escribe una mas corta",

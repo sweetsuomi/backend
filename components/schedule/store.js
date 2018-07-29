@@ -4,7 +4,7 @@ const e = require('../../helpers/errors');
 const schema = 'Schedule';
 
 exports.list = list;
-exports.getSchedule = getSchedule;
+exports.get = get;
 exports.post = post;
 exports.upsert = upsert;
 exports.disable = disable;
@@ -13,12 +13,20 @@ function list(query) {
 	return Store.list(schema, query);
 }
 
-function getSchedule(time) {
-	return Store.query(schema, { $and: [
-		{ timeStart: { $lte: time }},
-		{ timeEnd: { $gt: time }},
-		{ enabled: true }
-	]}, {}, true);
+function get(time) {
+	let query = { id: time };
+	let multi = false;
+
+	if (time.length === 4) {
+		query = { $and: [
+			{ timeStart: { $lte: time }},
+			{ timeEnd: { $gt: time }},
+			{ enabled: true }
+		]};
+		multi = true;
+	}
+
+	return Store.query(schema, query, {}, multi)
 }
 
 function exist(condition) {
