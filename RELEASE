@@ -1,6 +1,2 @@
-v0.3.0
-- Fix an issue for what it wasn't possible to remove multiple documents at the same time in store module
-- Fix an issue at getSchedule for what it was only listing things by a time param and not also by ID
-- Fix an issue creating an order preventing for new orders with wrong dates & times.
-- Refactor of post email
-- Refactor of cancel order emails
+v0.3.1
+- Remove package-lock.json from the project
