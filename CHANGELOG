@@ -1,0 +1,8 @@
+v0.2.0
+- Added order deliver support
+
+v0.1.0
+- Added CHANGELOG & RELEASE files to the project
+
+v0.0.1
+- Upgrade post order endpoint, with better functionality and custom mail
