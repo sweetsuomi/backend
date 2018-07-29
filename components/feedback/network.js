@@ -1,8 +1,6 @@
-const express = require('express');
+const router = require('express').Router();
 const Controller = require('./index');
 const Response = require('../../network/response');
-
-const router = express.Router();
 
 router.get('/', function (req, res, next) {
 	Controller.list().then(response => {

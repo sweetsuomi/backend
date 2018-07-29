@@ -4,6 +4,7 @@ const e = require('../../helpers/errors');
 const schema = 'User';
 
 exports.exist = exist;
+exports.list = list;
 exports.get = get;
 exports.post = post;
 exports.getByAccount = getByAccount;
@@ -12,6 +13,19 @@ function exist(condition) {
 	return Store.query(schema, condition, {}, false).then(response => {
 		return response ? true : false;
 	});
+}
+
+function list() {
+	const condition = { isEmailSubscribed: true };
+	
+	const statements = {
+		populate: [{
+			path: 'account',
+			select: 'email'
+		}]
+	};
+	
+	return Store.query(schema, condition, statements, true);
 }
 
 function get(id) {
