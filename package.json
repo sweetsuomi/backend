@@ -1,6 +1,6 @@
 {
   "name": "sweetsuomi",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Cloud for sweetsuomi",
   "main": "server.js",
   "scripts": {

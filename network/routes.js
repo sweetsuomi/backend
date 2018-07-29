@@ -11,6 +11,7 @@ const routes = server => {
 	server.use('/menu', require(component('menu')));
 	server.use('/feedback', require(component('feedback')));
 	server.use('/order', require(component('order')));
+	server.use('/mail', require(component('mail')));
 };
 
 module.exports = routes;
