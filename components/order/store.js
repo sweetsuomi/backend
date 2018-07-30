@@ -4,6 +4,7 @@ const e = require('../../helpers/errors');
 const schema = 'Order';
 
 exports.list = list;
+exports.count = count;
 exports.get = get;
 exports.post = post;
 exports.deliver = deliver;
@@ -13,6 +14,10 @@ function exist(condition) {
 	return Store.query(schema, condition, {}, false).then(response => {
 		return response ? true : false;
 	});
+}
+
+function count() {
+	return Store.count(schema, {});
 }
 
 function get(id) {

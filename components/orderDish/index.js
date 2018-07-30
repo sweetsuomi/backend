@@ -6,6 +6,7 @@ exports.post = post;
 exports.remove = remove;
 exports.getByOrder = getByOrder;
 exports.removeByOrder = removeByOrder;
+exports.amountSold = amountSold;
 
 function post(id, order) {
 	return Validate.post(id, order).then(() => {
@@ -28,5 +29,11 @@ function getByOrder(order) {
 function removeByOrder(orderId) {
 	return Validate.removeByOrder(orderId).then(() => {
 		return Store.removeByOrder(orderId);
+	});
+}
+
+function amountSold() {
+	return Store.amountSold().then(response => {
+		return response;
 	});
 }

@@ -5,6 +5,7 @@ const schema = 'User';
 
 exports.exist = exist;
 exports.list = list;
+exports.count = count;
 exports.get = get;
 exports.post = post;
 exports.getByAccount = getByAccount;
@@ -13,6 +14,10 @@ function exist(condition) {
 	return Store.query(schema, condition, {}, false).then(response => {
 		return response ? true : false;
 	});
+}
+
+function count() {
+	return Store.count(schema, {});
 }
 
 function list() {
