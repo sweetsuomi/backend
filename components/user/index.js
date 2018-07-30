@@ -4,6 +4,7 @@ const e = require('../../helpers/errors');
 
 exports.exist = exist;
 exports.list = list;
+exports.count = count;
 exports.get = get;
 exports.post = post;
 exports.validate = validate;
@@ -15,6 +16,10 @@ function validate(nickname, phone, company, address) {
 
 function list() {
 	return Store.list();
+}
+
+function count() {
+	return Store.count();
 }
 
 function exist(nickname) {

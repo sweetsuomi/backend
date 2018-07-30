@@ -1,4 +1,3 @@
-v1.1.0
-- Added a new field to user model in order to see if user allow to receive emails
-- Added mailAllUsers functionality
-- Added a new method to list all DB users
+v1.2.0
+- Added stats for count users and orders and dishes sold in our app.
+- Improved store layer to count documents for a given collection.

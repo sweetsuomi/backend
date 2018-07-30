@@ -10,6 +10,7 @@ const schedule = require('../schedule');
 const e = require('../../helpers/errors');
 
 exports.list = list;
+exports.count = count;
 exports.post = post;
 exports.deliver = deliver;
 exports.remove = remove;
@@ -25,6 +26,10 @@ function list(query) {
 	return Store.list(query.user, query.date, offset, limit).then(order => {
 		return { data: order };
 	});
+}
+
+function count() {
+	return Store.count();
 }
 
 function post(user, data) {
