@@ -1,3 +1,2 @@
-v1.2.0
-- Added stats for count users and orders and dishes sold in our app.
-- Improved store layer to count documents for a given collection.
+v1.2.1
+- Fixed an issue with some components for what they were not sending to the store layer its condition correctly
