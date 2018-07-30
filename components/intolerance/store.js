@@ -37,10 +37,11 @@ function update(id, name) {
 }
 
 function remove(id) {
-	return exist({ id: id }).then(response => {
+	const condition = { id: id };
+	return exist(condition).then(response => {
 		if (!response) {
 			throw e.error('INTOLERANCE_NOT_EXIST');
 		}
-		return Store.remove(schema, id, false);	
+		return Store.remove(schema, condition, false);	
 	});
 }
