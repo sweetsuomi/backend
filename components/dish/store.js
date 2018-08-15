@@ -39,6 +39,7 @@ function list(offset, limit, category) {
 	}
 	
 	const statements = {
+		select: '-__v -updatedAt -created_at',
 		populate: [{
 			path: 'category',
 			select: 'name' 

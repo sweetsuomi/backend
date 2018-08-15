@@ -51,10 +51,10 @@ function update(id, data, file) {
 		return Category.exist(data.category);
 	}).then(() => {
 		return Store.update(id, data);
-	}).then(dish => {
+	}).then(() => {
 		if (file) {
 			file.maxSize = 200;
-			return aws.upload('dish/', file, dish._id);
+			return aws.upload('dish/', file, id);
 		}
 		return { data: true };
 	}).then(() => {
