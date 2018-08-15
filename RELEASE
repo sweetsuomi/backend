@@ -1,2 +1,4 @@
-v1.2.1
-- Fixed an issue with some components for what they were not sending to the store layer its condition correctly
+v1.2.2
+- Fixed an issue with dish model for what it was not possible to define intolerances
+- Fixed dish controller for what we were taking the response of update a dish and we already has that dish id
+- Improved dish query, not sending unnecesary values
