@@ -24,7 +24,7 @@ const model = {
 		type: 'ObjectId',
 		ref: 'Category',
 	},
-	intolerance: [{
+	intolerances: [{
 		type: 'ObjectId',
 		ref: 'Intolerance',
 	}],
