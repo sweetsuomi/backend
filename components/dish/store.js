@@ -6,6 +6,7 @@ const schema = 'Dish';
 exports.updateCategory = updateCategory;
 exports.removeIntolerance = removeIntolerance;
 exports.list = list;
+exports.get = get;
 exports.post = post;
 exports.update = upsert;
 exports.disable = disable;
@@ -52,6 +53,13 @@ function list(offset, limit, category) {
 	};
 	
 	return Store.query(schema, condition, statements, true);
+}
+
+function get(id) {
+	const statements = {
+		select: 'price'
+	};
+	return Store.query(schema, { id: id }, statements, false);
 }
 
 function post(title, description, price, category, intolerances) {

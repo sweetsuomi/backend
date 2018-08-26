@@ -36,6 +36,10 @@ function list(user, date, offset, limit) {
 	if (date) { query.date = date };
 
 	const statements = {
+		populate: [{
+			path: 'user',
+			select: 'nickname'
+		}],
 		skip: offset,
 		limit: limit
     };
@@ -43,12 +47,13 @@ function list(user, date, offset, limit) {
 	return Store.query(schema, query, statements, true);
 }
 
-function post(user, date, note, time) {
+function post(user, date, note, time, price) {
 	let query = {
 		user: user,
 		date: date,
 		note: note,
-		time: time
+		time: time,
+		price: price
 	};
 	
 	if (note) {

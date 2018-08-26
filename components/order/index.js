@@ -41,7 +41,9 @@ function post(user, data) {
 	}).then(() => {
 		return menu.hasEnoughQuantity(data.order, date, data.schedule);
 	}).then(() => {
-		return Store.post(user.sub, date, data.note, data.time.replace(/:/g, ''));
+		return orderDish.getFinalPrice(data.order);
+	}).then(price => {
+		return Store.post(user.sub, date, data.note, data.time.replace(/:/g, ''), price);
 	}).then(response => {
 		return orderDish.post(response._id, data.order);
 	}).then(() => {

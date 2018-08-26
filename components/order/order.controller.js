@@ -10,19 +10,18 @@ const AWS = require("../aws/aws.model");
 const mongoose = require('mongoose');
 
 function getAllOrders(req, res, next) {
-	Order.getAllOrders(req.query.date)
-		.then(response => {
-			req.orderList = response;
-			let orderList = response.map(order => {
-				return mongoose.Types.ObjectId(order._id);
-			});
-			return OrderDish.getOrderList(orderList);
-		}).then(response => {
-			res.status(200).json({
-				orderList: req.orderList,
-				dishes: response
-			});
-		}).catch(error => next(error));
+	Order.getAllOrders(req.query.date).then(response => {
+		req.orderList = response;
+		let orderList = response.map(order => {
+			return mongoose.Types.ObjectId(order._id);
+		});
+		return OrderDish.getOrderList(orderList);
+	}).then(response => {
+		res.status(200).json({
+			orderList: req.orderList,
+			dishes: response
+		});
+	}).catch(error => next(error));
 }
 
 function deliverOrder(req, res, next) {

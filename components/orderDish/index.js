@@ -1,9 +1,10 @@
 const Store = require('./store');
 const Validate = require('./validations');
+const dish = require('../dish');
 const e = require('../../helpers/errors');
 
 exports.post = post;
-exports.remove = remove;
+exports.getFinalPrice = getFinalPrice;
 exports.getByOrder = getByOrder;
 exports.removeByOrder = removeByOrder;
 exports.amountSold = amountSold;
@@ -16,8 +17,11 @@ function post(id, order) {
 	});
 }
 
-function remove() {
-
+function getFinalPrice(order) {
+	const promises = order.map(element => dish.getFinalPrice(element.dish));
+	return Promise.all(promises).then(response => {
+		return response.reduce((previous, current) => previous.price + current.price);
+	});
 }
 
 function getByOrder(order) {
