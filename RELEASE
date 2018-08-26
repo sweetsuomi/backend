@@ -1,2 +1,2 @@
-v1.2.3
-- Added final price to the order entity to get a full price instead of calculate on each request
+v1.3.0
+- Added get method to order API REST.

@@ -1,3 +1,6 @@
+v1.2.3
+- Added final price to the order entity to get a full price instead of calculate on each request
+
 v1.2.2
 - Fixed an issue with dish model for what it was not possible to define intolerances
 - Fixed dish controller for what we were taking the response of update a dish and we already has that dish id

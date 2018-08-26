@@ -10,6 +10,7 @@ const schedule = require('../schedule');
 const e = require('../../helpers/errors');
 
 exports.list = list;
+exports.get = get;
 exports.count = count;
 exports.post = post;
 exports.deliver = deliver;
@@ -25,6 +26,17 @@ function list(query) {
 
 	return Store.list(query.user, query.date, offset, limit).then(order => {
 		return { data: order };
+	});
+}
+
+function get(id) {
+	let data = {};
+	return Store.get(id).then(response => {
+		data = response;
+		return orderDish.getByOrder(id);
+	}).then(response => {
+		data.dishes = response;
+		return { data: data }
 	});
 }
 
@@ -53,7 +65,10 @@ function post(user, data) {
 	});
 }
 
-function deliver(data) {
+function deliver(user, data) {
+	if (user.role !== 'Admin') {
+		throw e.error('ORDER_DELETE_FORBIDDEN');
+	}
 	return Validate.deliver(data.order, data.deliver).then(() => {
 		return Store.deliver(data.order, data.deliver);
 	}).then(() => {
