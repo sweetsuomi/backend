@@ -22,11 +22,21 @@ function count() {
 
 function get(id) {
 	const condition = { id: id };
+	const statements = {
+		populate: [{
+			path: 'user',
+			select: 'nickname phone company account',
+			populate: [{
+				path: 'account',
+				select: 'email -_id'
+			}]
+		}]
+	};
 	return exist(condition).then(response => {
 		if (!response) {
 			throw e.error('ORDER_NOT_EXIST');
 		}
-		return Store.query(schema, condition, {}, false);
+		return Store.query(schema, condition, statements, false);
 	});
 }
 
