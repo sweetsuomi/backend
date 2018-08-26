@@ -11,8 +11,11 @@ exports.upsert = upsert;
 exports.disable = disable;
 
 function list(filter) {
-	let query = { enabled: filter.enabled || true };
-	
+	let query = {};
+
+	if (filter.enabled !== undefined) {
+		query.enabled = filter.enabled || true;
+	}
 	return Store.list(query).then(list => {
 		return { data: list };
 	});
