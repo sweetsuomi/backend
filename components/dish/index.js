@@ -6,6 +6,7 @@ const aws = require('../aws');
 
 exports.updateCategory = updateCategory;
 exports.removeIntolerance = removeIntolerance;
+exports.getFinalPrice = getFinalPrice;
 exports.list = list;
 exports.post = post;
 exports.update = update;
@@ -17,6 +18,10 @@ function updateCategory(oldCategoryId, newCategoryId) {
 
 function removeIntolerance(intoleranceId) {
 	return Store.removeIntolerance(intoleranceId);
+}
+
+function getFinalPrice(id) {
+	return Store.get(id);
 }
 
 function list(data) {
