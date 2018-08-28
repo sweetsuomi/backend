@@ -90,6 +90,8 @@ function maxLength(string, maxValue) {
 
 function isValidDateTime(dateTime) {
 	const formats = [moment.ISO_8601, 'HH:mm'];
+
+	dateTime = moment(dateTime, "HHmm").format("HH:mm");
 	
 	let isValidTime = moment(dateTime, formats, true).isValid();
 	

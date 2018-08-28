@@ -1,3 +1,6 @@
+v1.3.1
+- Fix an issue for what schedule list was not filtering correctly depending of the param.
+
 v1.3.0
 - Added get method to order API REST.
 

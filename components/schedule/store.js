@@ -30,10 +30,10 @@ function get(time) {
 }
 
 function exist(condition) {
-	return Store.query(schema, condition, {}, true).then(response => {
-		if (response && response.length >= 0) {
-			return response.length > 0 ? true : false;
-		}
+	return Store.query(schema, condition, {}, false).then(response => {
+		// 	if (response && response.length >= 0) {
+		// 		return response.length > 0 ? true : false;
+		// 	}
 		return response ? true : false;
 	});
 }
