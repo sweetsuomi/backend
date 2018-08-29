@@ -43,7 +43,9 @@ function post(data) {
 
 function upsert(id, data) {
 	return Validate.upsert(id, data.name, data.timeStart, data.timeEnd).then(() => {
-		return Store.upsert(id, data);
+		const timeStart = data.timeStart.replace(/:/g, '');
+		const timeEnd = data.timeEnd.replace(/:/g, '');
+		return Store.upsert(id, data.name, data.enabled, parseInt(timeStart), parseInt(timeEnd));
 	}).then(response => {
 		return { data: response };
 	});
