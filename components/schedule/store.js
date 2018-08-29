@@ -54,11 +54,18 @@ function post(name, timeStart, timeEnd) {
 	});
 }
 
-function upsert(id, query) {
+function upsert(id, name, enabled, timeStart, timeEnd) {
 	return exist({ id: id }).then(response => {
 		if (!response) {
 			throw e.error('SCHEDULE_NOT_EXIST');
 		}
+
+		const query = {
+			name: name,
+			enabled: enabled,
+			timeStart: timeStart,
+			timeEnd: timeEnd
+		};
 		
 		return Store.upsert(schema, id, query, null);
 	});
