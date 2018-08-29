@@ -1,3 +1,7 @@
+v1.3.2
+- Fix an issue checking if if schedule exists
+- Fix an issue validating datetime
+
 v1.3.1
 - Fix an issue for what schedule list was not filtering correctly depending of the param.
 
