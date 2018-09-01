@@ -65,7 +65,7 @@ function post(user, data) {
 	}).then(() => {
 		return menu.updateDishQuantity(data.order);
 	}).then(() => {
-		// sendPostEmail(data, user);
+		sendPostEmail(data, user);
 	}).then(() => {
 		return { data: true };
 	});
@@ -124,12 +124,12 @@ function isValidTime(menuDishList, orderTime) {
 	}
 }
 
-function sendPostEmail(data, user, date) {
+function sendPostEmail(data, user) {
 	data.dishes = '';
 	data.nickname = user.name;
 	data.aws_cloudfront = config.aws_cloudfront;
 	for (let i = 0; i < data.order.length; i += 1) {
-		data.dishes += '<tr><td><table style="margin: 0 auto;"><tr><td><img style="width:50px;" src="' + config.aws_cloudfront + 'dish/' + data.order[i].dish + '.png" /></td><td><p style="text-align:left;">' + data.order[i].name + ' - Cantidad: ' + data.order[i].quantity + '</table></p></td></tr>';
+		data.dishes += '<tr><td><table style="margin: 0 auto;"><tr><td><img style="width:50px;" src="' + config.aws_cloudfront + 'dish/' + data.order[i].menu.dish._id + '.png" /></td><td><p style="text-align:left;">' + data.order[i].menu.dish.title + ' - Cantidad: ' + data.order[i].quantity + '</table></p></td></tr>';
 	}
 	sendOrderEmail('newOrder', 'Sweetsuomi - Nuevo pedido', data, config.admin_email);
 }
