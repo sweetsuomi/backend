@@ -13,7 +13,7 @@ const model = {
 		type: 'Number',
 		required: true
 	},
-	time: {
+	schedule: {
 		type: 'ObjectId',
 		ref: 'Schedule',
 		required: true

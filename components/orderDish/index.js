@@ -12,7 +12,7 @@ exports.amountSold = amountSold;
 function post(id, order) {
 	return Validate.post(id, order).then(() => {
 		for (let i = 0; i < order.length; i += 1) {
-			Store.post(order[i].dish, order[i].quantity, id);
+			Store.post(order[i].menu.dish._id, order[i].quantity, id);
 		}
 	});
 }
@@ -20,7 +20,7 @@ function post(id, order) {
 function getFinalPrice(order) {
 	const promises = order.map(element => dish.getFinalPrice(element.dish));
 	return Promise.all(promises).then(response => {
-		return response.reduce((previous, current) => previous.price + current.price);
+		return response.length === 1 ? response[0].price : response.reduce((previous, current) => previous.price + current.price);
 	});
 }
 

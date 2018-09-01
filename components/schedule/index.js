@@ -21,6 +21,11 @@ function list(filter) {
 	});
 }
 
+/**
+ * Find in the database a list of schedules that belongs to this time
+ * 
+ * @return {Object} A list of schedules
+ */
 function getNow() {
 	return this.get(moment().format('HH:mm')).then(schedule => {
 		return { data: schedule };
