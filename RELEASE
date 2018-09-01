@@ -1,2 +1,2 @@
-v1.3.3
-- Fix an issue for what the server is not parsing into integer the time
+v1.3.4
+- Fix an issue for what it was not possible to post menu dishes from different schedule zones
