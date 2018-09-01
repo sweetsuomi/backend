@@ -1,2 +1,2 @@
-v1.3.4
-- Fix an issue for what it was not possible to post menu dishes from different schedule zones
+v1.3.5
+- Fix an issue with store for what we still had old naming for schedule
