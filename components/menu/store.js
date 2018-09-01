@@ -26,7 +26,7 @@ function list(date, time, offset, limit) {
 	};
 	return Store.query(schema, {
 		date: date,
-		time: { $in: time }
+		schedule: { $in: time }
 	}, statements, true);
 }
 
@@ -38,12 +38,12 @@ function upsert(menu, date, time) {
 			Store.upsert(schema, {
 				dish: element.dish,
 				date: date,
-				time: time
+				schedule: time
 			}, {
 				dish: element.dish,
 				quantity: element.quantity,
 				date: date,
-				time: time
+				schedule: time
 			}, {
 				upsert: true
 			})
