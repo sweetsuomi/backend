@@ -7,7 +7,7 @@ exports.list = list;
 exports.upsert = upsert;
 exports.remove = remove;
 exports.updateDishQuantity = updateDishQuantity;
-exports.hasEnoughQuantity = hasEnoughQuantity;
+exports.getMenuFromList = getMenuFromList;
 
 function list(date, time, offset, limit) {
 	const statements = {
@@ -69,27 +69,27 @@ function exist(condition) {
 	});
 }
 
-function updateDishQuantity(dish, date, time, quantity) {
-	return Store.upsert(schema, {
-		dish: dish,
-		date: date,
-		time: time
-	}, { 
+function updateDishQuantity(id, quantity) {
+	return Store.upsert(schema, id, { 
 		$inc: { quantity: -quantity } 
-	}, {
-		upsert: true 
-	})
+	}, { upsert: true })
 }
 
-function hasEnoughQuantity(dish, date, time, quantity) {
-	return Store.query(schema, {
-		dish: dish,
-		date: date,
-		time: time
-	}, {}, false).then(response => {
-		if (response && response.quantity >= quantity) {
-			return true;
+function getMenuFromList(menuList) {
+	const query = {
+		_id: {
+			$in: menuList
 		}
-		throw e.error('MENU_NOT_ENOUGH_QUANTITY');
-	});
+	};
+
+	const statements = {
+		populate: [{
+			path: 'dish'
+		}, {
+			path: 'schedule',
+			select: 'timeEnd -_id'
+		}]
+	};
+	
+	return Store.query(schema, query, statements, true)
 }

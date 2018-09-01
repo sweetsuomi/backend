@@ -44,22 +44,28 @@ function count() {
 	return Store.count();
 }
 
-function post(user, data) {
-	const date = parseInt(moment().format('YYYY-MM-DD').replace(/-/g, ''), 10);
-	const time = moment().format('HH:mm');
-
-	return Validate.post(data.note, data.time, data.schedule, time).then(() => {
-		return isValidTime(data.schedule, data.time, time);
+function post(user, data) {	
+	return Validate.post(data.note, data.time).then(() => {
+		const menuIdList = data.order.map(element => element.menuId);
+		return menu.getMenuFromList(menuIdList);
+	}).then(menuDishList => {
+		data.order = data.order.map((element, index) => {
+			return {
+				menu: menuDishList[index],
+				quantity: element.quantity,
+			};
+		});
+		return isValidTime(data.order, data.time);
 	}).then(() => {
-		return menu.hasEnoughQuantity(data.order, date, data.schedule);
-	}).then(() => {
-		return orderDish.getFinalPrice(data.order);
-	}).then(price => {
+		const date = parseInt(moment().format('YYYY-MM-DD').replace(/-/g, ''), 10);
+		const price = data.order.map(element => element.menu.dish.price * element.quantity).reduce((acc, current) => acc + current);
 		return Store.post(user.sub, date, data.note, data.time.replace(/:/g, ''), price);
 	}).then(response => {
 		return orderDish.post(response._id, data.order);
 	}).then(() => {
-		sendPostEmail(data, user);
+		return menu.updateDishQuantity(data.order);
+	}).then(() => {
+		// sendPostEmail(data, user);
 	}).then(() => {
 		return { data: true };
 	});
@@ -102,17 +108,20 @@ function remove(user, order) {
 		return { data: true };
 	});
 }
+/**
+ * Convert string hours & minutes format from hh:mm to integer hhmm.
+ * 
+ * @param {Object} menuDishList A list of dishes 
+ * @param {String} time The order time 
+ */
+function isValidTime(menuDishList, orderTime) {
+	const restrictedTime = menuDishList.map(element => element.menu.schedule.timeEnd).reduce((acc, current) => acc < current ? acc : current);
+	const now = parseInt(moment().format('HH:mm').replace(/:/g, ''), 10);
+	orderTime = parseInt(orderTime.replace(/:/g, ''), 10);
 
-function isValidTime(scheduleId, time, now) {
-	const t = parseInt(time.replace(/:/g, ''), 10);
-
-	now = parseInt(now.replace(/:/g, ''), 10);
-
-	return schedule.get(scheduleId).then(data => {
-		if (t >= data.timeEnd || now > data.timeEnd || now > t) {
-			throw e.error('ORDER_DELETE_FORBIDDEN');
-		}
-	});
+	if (restrictedTime < now || orderTime < now || orderTime > restrictedTime) {
+		throw e.error('ORDER_DELETE_FORBIDDEN');
+	}
 }
 
 function sendPostEmail(data, user, date) {
@@ -120,7 +129,6 @@ function sendPostEmail(data, user, date) {
 	data.nickname = user.name;
 	data.aws_cloudfront = config.aws_cloudfront;
 	for (let i = 0; i < data.order.length; i += 1) {
-		menu.updateDishQuantity(data.order[i].dish, date, data.schedule, data.order[i].quantity);
 		data.dishes += '<tr><td><table style="margin: 0 auto;"><tr><td><img style="width:50px;" src="' + config.aws_cloudfront + 'dish/' + data.order[i].dish + '.png" /></td><td><p style="text-align:left;">' + data.order[i].name + ' - Cantidad: ' + data.order[i].quantity + '</table></p></td></tr>';
 	}
 	sendOrderEmail('newOrder', 'Sweetsuomi - Nuevo pedido', data, config.admin_email);

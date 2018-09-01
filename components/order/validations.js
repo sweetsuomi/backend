@@ -6,11 +6,10 @@ exports.post = post;
 exports.deliver = deliver;
 exports.remove = remove;
 
-function post(note, time, schedule, now) {
+function post(note, time) {
     return Promise.all([
-        verifyTime(time, now),
-        verifyNote(note),
-        verifySchedule(schedule)
+        verifyTime(time),
+        verifyNote(note)
     ]);
 }
 
@@ -68,17 +67,6 @@ function verifyNote(note) {
 			return reject(e.error('ORDER_NOTE_NOT_VALID'));
         } else if (!Validations.maxLength(note, 100)) {
 			return reject(e.error('ORDER_NOTE_SHORTER'));
-        }
-        resolve();
-    });
-}
-
-function verifySchedule(schedule) {
-	return new Promise((resolve, reject) => {
-		if (Validations.isUndefined(schedule)) {
-			return resolve();
-		} else if (!Validations.isMongoose(schedule)) {
-			return reject(e.error('ORDER_NOTE_NOT_VALID'));
         }
         resolve();
     });
