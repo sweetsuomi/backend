@@ -20,6 +20,9 @@ function list(date, time, offset, limit) {
 				path: 'intolerance',
 				select: 'name'
 			}]
+		}, {
+			path: 'schedule',
+			select: 'timeStart timeEnd'
 		}],
 		skip: offset,
 		limit: limit
