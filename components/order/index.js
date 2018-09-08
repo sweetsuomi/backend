@@ -6,7 +6,7 @@ const aws = require('../aws/index');
 const Validate = require('./validations');
 const orderDish = require('../orderdish');
 const menu = require('../menu');
-const schedule = require('../schedule');
+const user = require('../user');
 const e = require('../../helpers/errors');
 
 exports.list = list;
@@ -44,7 +44,7 @@ function count() {
 	return Store.count();
 }
 
-function post(user, data) {	
+function post(session, data) {	
 	return Validate.post(data.note, data.time).then(() => {
 		const menuIdList = data.order.map(element => element.menuId);
 		return menu.getMenuFromList(menuIdList);
@@ -59,20 +59,20 @@ function post(user, data) {
 	}).then(() => {
 		const date = parseInt(moment().format('YYYY-MM-DD').replace(/-/g, ''), 10);
 		const price = data.order.map(element => element.menu.dish.price * element.quantity).reduce((acc, current) => acc + current);
-		return Store.post(user.sub, date, data.note, data.time.replace(/:/g, ''), price);
+		return Store.post(session.sub, date, data.note, data.time.replace(/:/g, ''), price);
 	}).then(response => {
 		return orderDish.post(response._id, data.order);
 	}).then(() => {
 		return menu.updateDishQuantity(data.order);
 	}).then(() => {
-		sendPostEmail(data, user);
+		sendPostEmail(data, session);
 	}).then(() => {
 		return { data: true };
 	});
 }
 
-function deliver(user, data) {
-	if (user.role !== 'Admin') {
+function deliver(session, data) {
+	if (session.role !== 'Admin') {
 		throw e.error('ORDER_DELETE_FORBIDDEN');
 	}
 	return Validate.deliver(data.order, data.deliver).then(() => {
@@ -83,7 +83,7 @@ function deliver(user, data) {
 }
 
 // Validate & remove the order in case you are admin or in case that the margin of time is less than 1 hour
-function remove(user, order) {
+function remove(session, order) {
 	let data = {};
 	return Validate.remove(order).then(() => {
 		return Store.get(order);
@@ -92,7 +92,7 @@ function remove(user, order) {
 		return orderDish.getByOrder(order);
 	}).then(response => {
 		data.order = response;
-		if (user.role !== 'Admin') {
+		if (session.role !== 'Admin') {
 			const time = parseInt(moment().format('HH:mm').replace(/:/g, ''), 10);
 			const date = parseInt(moment().format('YYYY-MM-DD').replace(/-/g, ''), 10);
 			if (data.time - time < 60 && data.date <= date || data.date < date) {
@@ -103,7 +103,9 @@ function remove(user, order) {
 	}).then(() => {
 		return Store.remove(order);
 	}).then(() => {
-		sendCancelOrderEmail(data, user);
+		return user.get(data.user._id);
+	}).then(usr => {
+		sendCancelOrderEmail(data, data.user.nickname, usr.data.account.email);
 		sendUserCancelOrderEmail(data);
 		return { data: true };
 	});
@@ -124,9 +126,9 @@ function isValidTime(menuDishList, orderTime) {
 	}
 }
 
-function sendPostEmail(data, user) {
+function sendPostEmail(data, session, email) {
 	data.dishes = '';
-	data.nickname = user.name;
+	data.nickname = session.name;
 	data.aws_cloudfront = config.aws_cloudfront;
 	for (let i = 0; i < data.order.length; i += 1) {
 		data.dishes += '<tr><td><table style="margin: 0 auto;"><tr><td><img style="width:50px;" src="' + config.aws_cloudfront + 'dish/' + data.order[i].menu.dish._id + '.png" /></td><td><p style="text-align:left;">' + data.order[i].menu.dish.title + ' - Cantidad: ' + data.order[i].quantity + '</table></p></td></tr>';
@@ -134,10 +136,10 @@ function sendPostEmail(data, user) {
 	sendOrderEmail('newOrder', 'Sweetsuomi - Nuevo pedido', data, config.admin_email);
 }
 
-function sendCancelOrderEmail(data, user) {
-	data.nickname = user.name;
+function sendCancelOrderEmail(data, nickname, email) {
+	data.nickname = nickname
 	data.aws_cloudfront = config.aws_cloudfront;
-	sendOrderEmail('cancelOrder', 'Sweetsuomi - Pedido cancelado', data, config.admin_email);
+	sendOrderEmail('cancelOrder', 'Sweetsuomi - Pedido cancelado', data, email);
 }
 
 function sendUserCancelOrderEmail(data) {

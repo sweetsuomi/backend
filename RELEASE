@@ -1,2 +1,2 @@
-v1.3.5
-- Fix an issue with store for what we still had old naming for schedule
+v1.3.7
+- Fix an issue sending emails to the wrong user when deleting the order
