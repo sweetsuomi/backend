@@ -9,6 +9,7 @@ exports.upsert = upsert;
 exports.remove = remove;
 exports.updateDishQuantity = updateDishQuantity;
 exports.getMenuFromList = getMenuFromList;
+exports.restoreMenuDishes = restoreMenuDishes;
 
 function list(query) {
 	let date = query.date ? query.date : moment().format('YYYY-MM-DD');
@@ -50,8 +51,8 @@ function remove(menuId) {
 	});
 }
 
-function updateDishQuantity(order) {
-	const promises = order.map(element => Store.updateDishQuantity(element.menu._id.toString(), element.quantity));
+function updateDishQuantity(dishes) {
+	const promises = dishes.map(element => Store.updateDishQuantity(element.menu._id.toString(), element.quantity));
 	return Promise.all(promises);
 }
 
@@ -59,6 +60,13 @@ function getArrayOfScheduleId(time) {
 	return time.map(function (time) {
     	return time._id; 
 	});
+}
+
+function restoreMenuDishes(menuList) {
+	const promises = menuList.map(element => {
+		return Store.restoreMenuDishes(element.menuId, element.quantity);
+	});
+	return Promise.all(promises);
 }
 
 /**
