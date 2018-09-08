@@ -1,4 +1,4 @@
-const OrderDish = require('../orderDish');
+const OrderDish = require('../orderdish');
 const User = require('../user');
 const Order = require('../order');
 
