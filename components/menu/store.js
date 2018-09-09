@@ -99,5 +99,5 @@ function getMenuFromList(menuList) {
 }
 
 function restoreMenuDishes(id, quantity) {
-	return Store.upsert(schema, id, { $inc: { quantity: +quantity } }, {})
+	return Store.upsert(schema, id, { $inc: { quantity: +quantity } }, {});
 }

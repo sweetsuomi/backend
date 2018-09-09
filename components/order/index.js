@@ -44,7 +44,7 @@ function count() {
 	return Store.count();
 }
 
-function post(session, data) {	
+function post(session, data) {
 	return Validate.post(data.note, data.time).then(() => {
 		const menuIdList = data.order.map(element => element.menuId);
 		return menu.getMenuFromList(menuIdList);
@@ -102,6 +102,11 @@ function remove(session, order) {
 		return orderDish.removeByOrder(order);
 	}).then(() => {
 		return Store.remove(order);
+	}).then(() => {
+		const menuList = data.order.map(element => {
+			return { menu: element.menu, quantity: element.quantity };
+		});
+		return menu.restoreMenuDishes(menuList);
 	}).then(() => {
 		return user.get(data.user._id);
 	}).then(usr => {

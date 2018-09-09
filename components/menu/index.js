@@ -64,7 +64,7 @@ function getArrayOfScheduleId(time) {
 
 function restoreMenuDishes(menuList) {
 	const promises = menuList.map(element => {
-		return Store.restoreMenuDishes(element.menuId, element.quantity);
+		return Store.restoreMenuDishes(element.menu.toString(), element.quantity);
 	});
 	return Promise.all(promises);
 }

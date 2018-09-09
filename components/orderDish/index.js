@@ -12,7 +12,7 @@ exports.amountSold = amountSold;
 function post(id, order) {
 	return Validate.post(id, order).then(() => {
 		for (let i = 0; i < order.length; i += 1) {
-			Store.post(order[i].menu.dish._id, order[i].quantity, id);
+			Store.post(order[i].menu.dish._id, order[i].quantity, id, order[i].menu._id);
 		}
 	});
 }
