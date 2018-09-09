@@ -9,11 +9,12 @@ exports.getByOrder = getByOrder;
 exports.removeByOrder = removeByOrder;
 exports.amountSold = amountSold;
 
-function post(dish, quantity, order) {
+function post(dish, quantity, order, menuId) {
 	return Store.post(schema, {
         dish: dish,
         quantity: quantity,
-        order: order
+        order: order,
+        menu: menuId
 	});
 }
 

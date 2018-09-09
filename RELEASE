@@ -1,2 +1,2 @@
-v1.3.7
-- Fix an issue sending emails to the wrong user when deleting the order
+v1.3.8
+- When deleting an order, dishes are not going back to the menu

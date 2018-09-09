@@ -13,6 +13,11 @@ const model = {
 		ref: 'Order',
         required: true,
         index: true
+	},
+	menu: {
+		type: 'ObjectId',
+		ref: 'Menu',
+		required: true
 	}
 };
 

@@ -91,7 +91,7 @@ function upsert(name, condition, query, filters) {
 	}
 	
 	return sentence.lean().exec().then(response => {
-		if (response.upserted) {
+		if (response && response.upserted) {
 			return response.upserted[0]._id;
 		}
 		return response ? true : false;

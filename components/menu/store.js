@@ -8,6 +8,7 @@ exports.upsert = upsert;
 exports.remove = remove;
 exports.updateDishQuantity = updateDishQuantity;
 exports.getMenuFromList = getMenuFromList;
+exports.restoreMenuDishes = restoreMenuDishes;
 
 function list(date, time, offset, limit) {
 	const statements = {
@@ -95,4 +96,8 @@ function getMenuFromList(menuList) {
 	};
 	
 	return Store.query(schema, query, statements, true)
+}
+
+function restoreMenuDishes(id, quantity) {
+	return Store.upsert(schema, id, { $inc: { quantity: +quantity } }, {});
 }
