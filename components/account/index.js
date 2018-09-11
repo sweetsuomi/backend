@@ -26,9 +26,9 @@ function register(data) {
 	}).then(() => {
 		return User.validate(data.nickname, data.phone, data.company, data.address);
 	}).then(() => {
-		return registerAccount(data.password, data.email, data.nickname, data.role);
+		return registerAccount(data.password.trim(), data.email.trim(), data.nickname.trim(), data.role.trim());
 	}).then(account_id => {
-		return User.post(data.nickname, data.phone, data.company, data.address, account_id);
+		return User.post(data.nickname.trim(), data.phone, data.company.trim(), data.address.trim(), account_id);
 	}).then(() => {
 		return sendRegisterEmail(data);
 	}).then(() => {
@@ -40,7 +40,7 @@ function login(data) {
 	let account = {};
 
 	return Validate.post(data.email, data.password).then(() => {
-		return Store.get(data.email);
+		return Store.get(data.email.trim());
 	}).then(response => {
 		if (!response) {
 			throw e.error('EMAIL_NOT_VALID');
@@ -49,7 +49,7 @@ function login(data) {
 		return User.getByAccount(account._id);
 	}).then(response => {
 		account.userId = response._id;
-		return comparePasswordHash(data.password, account.password || null);
+		return comparePasswordHash(data.password.trim(), account.password || null);
 	}).then(areEqual => {
 		if (areEqual === false) {
 			throw e.error('PASSWORD_IS_NOT_VALID');
