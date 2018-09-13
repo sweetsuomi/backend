@@ -19,6 +19,7 @@ mongoose.Promise = Promise;
 let modelInstances = [];
 
 exports.list = list;
+exports.count = count;
 exports.query = query;
 exports.post = post;
 exports.upsert = upsert;
@@ -28,6 +29,15 @@ function list(name, query) {
 	let schema = setupSchema(name);
 	
 	return schema.find(query).lean().exec().catch(error => {
+		logger.error(error.message);
+		throw e.error('DATABASE_ERROR', 500);
+	});
+}
+
+function count(name, condition) {
+	let schema = setupSchema(name);
+
+	return schema.count(condition).catch(error => {
 		logger.error(error.message);
 		throw e.error('DATABASE_ERROR', 500);
 	});
@@ -81,7 +91,7 @@ function upsert(name, condition, query, filters) {
 	}
 	
 	return sentence.lean().exec().then(response => {
-		if (response.upserted) {
+		if (response && response.upserted) {
 			return response.upserted[0]._id;
 		}
 		return response ? true : false;

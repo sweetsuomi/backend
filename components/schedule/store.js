@@ -30,10 +30,10 @@ function get(time) {
 }
 
 function exist(condition) {
-	return Store.query(schema, condition, {}, true).then(response => {
-		if (response && response.length >= 0) {
-			return response.length > 0 ? true : false;
-		}
+	return Store.query(schema, condition, {}, false).then(response => {
+		// 	if (response && response.length >= 0) {
+		// 		return response.length > 0 ? true : false;
+		// 	}
 		return response ? true : false;
 	});
 }
@@ -54,11 +54,18 @@ function post(name, timeStart, timeEnd) {
 	});
 }
 
-function upsert(id, query) {
+function upsert(id, name, enabled, timeStart, timeEnd) {
 	return exist({ id: id }).then(response => {
 		if (!response) {
 			throw e.error('SCHEDULE_NOT_EXIST');
 		}
+
+		const query = {
+			name: name,
+			enabled: enabled,
+			timeStart: timeStart,
+			timeEnd: timeEnd
+		};
 		
 		return Store.upsert(schema, id, query, null);
 	});

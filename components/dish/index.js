@@ -6,6 +6,7 @@ const aws = require('../aws');
 
 exports.updateCategory = updateCategory;
 exports.removeIntolerance = removeIntolerance;
+exports.getFinalPrice = getFinalPrice;
 exports.list = list;
 exports.post = post;
 exports.update = update;
@@ -17,6 +18,10 @@ function updateCategory(oldCategoryId, newCategoryId) {
 
 function removeIntolerance(intoleranceId) {
 	return Store.removeIntolerance(intoleranceId);
+}
+
+function getFinalPrice(id) {
+	return Store.get(id);
 }
 
 function list(data) {
@@ -51,10 +56,10 @@ function update(id, data, file) {
 		return Category.exist(data.category);
 	}).then(() => {
 		return Store.update(id, data);
-	}).then(dish => {
+	}).then(() => {
 		if (file) {
 			file.maxSize = 200;
-			return aws.upload('dish/', file, dish._id);
+			return aws.upload('dish/', file, id);
 		}
 		return { data: true };
 	}).then(() => {

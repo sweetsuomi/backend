@@ -1,3 +1,53 @@
+v1.3.8
+- When deleting an order, dishes are not going back to the menu
+
+v1.3.7
+- Fix an issue sending emails to the wrong user when deleting the order
+
+v1.3.6
+- Remove some useless files
+- Populate schedule element to
+- Fix an issue for what the server was rejecting a module with capital letter
+
+v1.3.5
+- Fix an issue with store for what we still had old naming for schedule
+
+v1.3.4
+- Fix an issue for what it was not possible to post menu dishes from different schedule zones
+
+v1.3.3
+- Fix an issue for what the server is not parsing into integer the time
+
+v1.3.2
+- Fix an issue checking if if schedule exists
+- Fix an issue validating datetime
+
+v1.3.1
+- Fix an issue for what schedule list was not filtering correctly depending of the param.
+
+v1.3.0
+- Added get method to order API REST.
+
+v1.2.3
+- Added final price to the order entity to get a full price instead of calculate on each request
+
+v1.2.2
+- Fixed an issue with dish model for what it was not possible to define intolerances
+- Fixed dish controller for what we were taking the response of update a dish and we already has that dish id
+- Improved dish query, not sending unnecesary values
+
+v1.2.1
+- Fixed an issue with some components for what they were not sending to the store layer its condition correctly
+
+v1.2.0
+- Added stats for count users and orders and dishes sold in our app.
+- Improved store layer to count documents for a given collection.
+
+v1.1.0
+- Added a new field to user model in order to see if user allow to receive emails
+- Added mailAllUsers functionality
+- Added a new method to list all DB users
+
 v1.0.0
 - Prepare v1.0
 

@@ -7,12 +7,14 @@ exports.post = post;
 exports.upsert = upsert;
 exports.getByOrder = getByOrder;
 exports.removeByOrder = removeByOrder;
+exports.amountSold = amountSold;
 
-function post(dish, quantity, order) {
+function post(dish, quantity, order, menuId) {
 	return Store.post(schema, {
         dish: dish,
         quantity: quantity,
-        order: order
+        order: order,
+        menu: menuId
 	});
 }
 
@@ -47,4 +49,13 @@ function getByOrder(order) {
 
 function removeByOrder(orderId) {
     return Store.remove(schema, { order: orderId }, true)
+}
+
+function amountSold() {
+    return Store.query(schema, {}, {
+        populate: [{
+            path: 'dish',
+            select: 'price'
+		}]
+    }, true);
 }

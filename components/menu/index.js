@@ -8,7 +8,8 @@ exports.list = list;
 exports.upsert = upsert;
 exports.remove = remove;
 exports.updateDishQuantity = updateDishQuantity;
-exports.hasEnoughQuantity = hasEnoughQuantity;
+exports.getMenuFromList = getMenuFromList;
+exports.restoreMenuDishes = restoreMenuDishes;
 
 function list(query) {
 	let date = query.date ? query.date : moment().format('YYYY-MM-DD');
@@ -50,27 +51,27 @@ function remove(menuId) {
 	});
 }
 
-function updateDishQuantity(dish, date, time, quantity) {
-	return Store.updateDishQuantity(dish, date, time, quantity);
-}
-
-function hasEnoughQuantity(order, date, schedule) {
-	let queries = [];
-	for (let i = 0; i < order.length; i += 1) {
-		queries.push(
-			Store.hasEnoughQuantity(
-				order[i].dish,
-				date,
-				schedule,
-				parseInt(order[i].quantity, 10)
-			)
-		);
-	}
-	return Promise.all(queries)
+function updateDishQuantity(dishes) {
+	const promises = dishes.map(element => Store.updateDishQuantity(element.menu._id.toString(), element.quantity));
+	return Promise.all(promises);
 }
 
 function getArrayOfScheduleId(time) {
 	return time.map(function (time) {
     	return time._id; 
 	});
+}
+
+function restoreMenuDishes(menuList) {
+	const promises = menuList.map(element => {
+		return Store.restoreMenuDishes(element.menu.toString(), element.quantity);
+	});
+	return Promise.all(promises);
+}
+
+/**
+ * Get full details from a list of id of dishes
+ */
+function getMenuFromList(menuList) {
+	return Store.getMenuFromList(menuList);
 }

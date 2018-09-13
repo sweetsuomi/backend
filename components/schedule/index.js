@@ -11,13 +11,21 @@ exports.upsert = upsert;
 exports.disable = disable;
 
 function list(filter) {
-	let query = { enabled: filter.enabled || true };
-	
+	let query = {};
+
+	if (filter.enabled !== undefined) {
+		query.enabled = filter.enabled || true;
+	}
 	return Store.list(query).then(list => {
 		return { data: list };
 	});
 }
 
+/**
+ * Find in the database a list of schedules that belongs to this time
+ * 
+ * @return {Object} A list of schedules
+ */
 function getNow() {
 	return this.get(moment().format('HH:mm')).then(schedule => {
 		return { data: schedule };
@@ -40,7 +48,9 @@ function post(data) {
 
 function upsert(id, data) {
 	return Validate.upsert(id, data.name, data.timeStart, data.timeEnd).then(() => {
-		return Store.upsert(id, data);
+		const timeStart = data.timeStart.replace(/:/g, '');
+		const timeEnd = data.timeEnd.replace(/:/g, '');
+		return Store.upsert(id, data.name, data.enabled, parseInt(timeStart), parseInt(timeEnd));
 	}).then(response => {
 		return { data: response };
 	});

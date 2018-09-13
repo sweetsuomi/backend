@@ -39,10 +39,11 @@ function update(id, name) {
 }
 
 function disable(id) {
-	return exist({ id: id }).then(response => {
+	const condition = { id: id };
+	return exist(condition).then(response => {
 		if (!response) {
 			throw e.error('CATEGORY_NOT_EXIST');
 		}
-		return Store.remove(schema, id, false);	
+		return Store.remove(schema, condition, false);	
 	});
 }

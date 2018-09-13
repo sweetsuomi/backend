@@ -4,6 +4,7 @@ const e = require('../../helpers/errors');
 const schema = 'Order';
 
 exports.list = list;
+exports.count = count;
 exports.get = get;
 exports.post = post;
 exports.deliver = deliver;
@@ -15,13 +16,27 @@ function exist(condition) {
 	});
 }
 
+function count() {
+	return Store.count(schema, {});
+}
+
 function get(id) {
 	const condition = { id: id };
+	const statements = {
+		populate: [{
+			path: 'user',
+			select: 'nickname phone company account',
+			populate: [{
+				path: 'account',
+				select: 'email -_id'
+			}]
+		}]
+	};
 	return exist(condition).then(response => {
 		if (!response) {
 			throw e.error('ORDER_NOT_EXIST');
 		}
-		return Store.query(schema, condition, {}, false);
+		return Store.query(schema, condition, statements, false);
 	});
 }
 
@@ -31,6 +46,10 @@ function list(user, date, offset, limit) {
 	if (date) { query.date = date };
 
 	const statements = {
+		populate: [{
+			path: 'user',
+			select: 'nickname'
+		}],
 		skip: offset,
 		limit: limit
     };
@@ -38,12 +57,13 @@ function list(user, date, offset, limit) {
 	return Store.query(schema, query, statements, true);
 }
 
-function post(user, date, note, time) {
+function post(user, date, note, time, price) {
 	let query = {
 		user: user,
 		date: date,
 		note: note,
-		time: time
+		time: time,
+		price: price
 	};
 	
 	if (note) {
