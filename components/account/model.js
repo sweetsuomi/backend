@@ -28,7 +28,7 @@ const model = {
 	},
 	role: {
 		type: 'String',
-		enum: ['user', 'admin'],
+		enum: ['User', 'Admin'],
 		default: 'user'
 	}
 };

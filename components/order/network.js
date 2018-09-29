@@ -13,8 +13,8 @@ router.get('/:id', (req, res, next) => {
 });
 
 // Get a list of orders filtered by user, date or a combination of both
-router.get('/', (req, res, next) => {
-	Controller.list(req.query).then(response => {
+router.get('/', verifyToken, (req, res, next) => {
+	Controller.list(req.user, req.query).then(response => {
 		Response.success(req, res, next, (response.code || 200), response.data);
 	}).catch(error => {
 		Response.error(req, res, next, (error.status || 500), error.message);

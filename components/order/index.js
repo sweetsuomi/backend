@@ -16,12 +16,16 @@ exports.post = post;
 exports.deliver = deliver;
 exports.remove = remove;
 
-function list(query) {
+function list(user, query) {
 	const offset = query.offset ? parseInt(query.offset) : 0;
 	const limit = query.limit ? parseInt(query.limit) : 1000;
 
 	if (query.date) {
 		query.date = parseInt(query.date.replace(/-/g, ''), 10);
+	}
+
+	if (user.role !== 'Admin') {
+		query.user = user.sub;
 	}
 
 	return Store.list(query.user, query.date, offset, limit).then(order => {
