@@ -1,4 +1,4 @@
-FROM node:7
+FROM node:8
 MAINTAINER DevStarlight
 ENV TZ=Europe/Madrid
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone

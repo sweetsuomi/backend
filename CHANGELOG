@@ -1,3 +1,6 @@
+v1.3.9
+- Fix an issue for what user string fields were not being trimmed
+
 v1.3.8
 - When deleting an order, dishes are not going back to the menu
 
