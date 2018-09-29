@@ -63,13 +63,15 @@ function post(nickname, phone, company, address, account_id) {
 			throw e.error('NICKNAME_IN_USE', 409);
 		}
 		
-		const query = {
+		let query = {
 			nickname: nickname,
 			phone: phone,
-			company: company,
-			address: address,
 			account: account_id
 		};
+
+		if (company) {
+			query.company = company.trim();
+		}
 		
 		return Store.post(schema, query);
 	});

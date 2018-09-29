@@ -26,9 +26,9 @@ function register(data) {
 	}).then(() => {
 		return User.validate(data.nickname, data.phone, data.company, data.address);
 	}).then(() => {
-		return registerAccount(data.password.trim(), data.email.trim(), data.nickname.trim(), data.role.trim());
+		return registerAccount(data.password.trim(), data.email.trim(), data.nickname.trim(), data.role || 'User');
 	}).then(account_id => {
-		return User.post(data.nickname.trim(), data.phone, data.company.trim(), data.address.trim(), account_id);
+		return User.post(data.nickname.trim(), data.phone, data.company, data.address, account_id);
 	}).then(() => {
 		return sendRegisterEmail(data);
 	}).then(() => {
