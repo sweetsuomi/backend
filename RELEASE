@@ -1,2 +1,3 @@
-v1.3.9
-- Fix an issue for what user string fields were not being trimmed
+v1.3.10
+- Filter orders by user or admin.
+- Fix an issue with register for what it is expecting an address.
